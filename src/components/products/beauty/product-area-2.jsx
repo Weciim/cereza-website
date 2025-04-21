@@ -13,7 +13,7 @@ const ProductAreaTwo = () => {
     data: products,
     isError,
     isLoading,
-  } = useGetProductTypeQuery({ type: "beauty" });
+  } = useGetProductTypeQuery({ type: "suncare" });
   const activeRef = useRef(null);
   const marker = useRef(null);
 
@@ -46,27 +46,27 @@ const ProductAreaTwo = () => {
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && products?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    let product_items = products.data;
+  if (!isLoading && !isError && products?.length > 0) {
+    let product_items = products;
     if (activeTab === "All Collection") {
-      product_items = products.data;
+      product_items = products;
     } else if (activeTab === "Trending") {
-      product_items = products.data
+      product_items = products
         .slice()
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (activeTab === "Beauty") {
-      product_items = products.data.filter(
+      product_items = products.filter(
         (p) => p.category.name === "Discover Skincare"
       );
     } else if (activeTab === "Cosmetics") {
-      product_items = products.data.filter(
+      product_items = products.filter(
         (p) => p.category.name === "Awesome Lip Care"
       );
     } else {
-      product_items = products.data;
+      product_items = products;
     }
     content = (
       <>

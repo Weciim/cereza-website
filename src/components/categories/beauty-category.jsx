@@ -12,8 +12,7 @@ const BeautyCategory = () => {
     data: categories,
     isLoading,
     isError,
-  } = useGetProductTypeCategoryQuery("beauty");
-
+  } = useGetProductTypeCategoryQuery("suncare");
   // handle category route
   const handleCategoryRoute = (title) => {
     router.push(
@@ -28,7 +27,7 @@ const BeautyCategory = () => {
   let content = null;
 
   if (isLoading) {
-    content = <HomeThreeCategoryLoader loading={isLoading}/>;
+    content = <HomeThreeCategoryLoader loading={isLoading} />;
   }
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;

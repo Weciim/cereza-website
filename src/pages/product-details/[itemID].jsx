@@ -15,7 +15,7 @@ const ProductDetailsPage = ({ query }) => {
     data: product,
     isLoading,
     isError,
-  } = useGetProductQuery("6431364df5a812bd37e765ac");
+  } = useGetProductQuery(query.itemID);
   // decide what to render
   let content = null;
   if (isLoading) {
@@ -24,6 +24,7 @@ const ProductDetailsPage = ({ query }) => {
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
+
   if (!isLoading && !isError && product) {
     content = (
       <>

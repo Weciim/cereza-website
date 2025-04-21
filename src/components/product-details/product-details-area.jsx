@@ -6,7 +6,7 @@ import DetailsTabNav from "./details-tab-nav";
 import RelatedProducts from "./related-products";
 
 const ProductDetailsArea = ({ productItem }) => {
-  const { _id, img, imageURLs, videoId,status } = productItem || {};
+  const { itemID, img, imageURLs, videoId, status } = productItem || {};
   const [activeImg, setActiveImg] = useState(img);
   const dispatch = useDispatch();
   // active image change when img change
@@ -72,7 +72,7 @@ const ProductDetailsArea = ({ productItem }) => {
             </div>
           </div>
           <div className="row">
-            <RelatedProducts id={_id} />
+            <RelatedProducts id={itemID} />
           </div>
         </div>
       </section>

@@ -11,12 +11,12 @@ import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 import { add_to_compare } from "@/redux/features/compareSlice";
 
 const ProductItem = ({ product, style_2 = false }) => {
-  const { _id, img, category, title, reviews, price, discount, tags, status } = product || {};
+  const { itemID, img, category, title, reviews, price, discount, tags, status } = product || {};
   const [ratingVal, setRatingVal] = useState(0);
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
-  const isAddedToCart = cart_products.some((prd) => prd._id === _id);
-  const isAddedToWishlist = wishlist.some((prd) => prd._id === _id);
+  const isAddedToCart = cart_products.some((prd) => prd.itemID === itemID);
+  const isAddedToWishlist = wishlist.some((prd) => prd.itemID === itemID);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const ProductItem = ({ product, style_2 = false }) => {
   return (
     <div className={`tp-product-item-2 ${style_2 ? "" : "mb-40"}`}>
       <div className="tp-product-thumb-2 p-relative z-index-1 fix">
-        <Link href={`/product-details/${_id}`}>
+        <Link href={`/product-details/${itemID}`}>
           <Image
             src={img}
             alt="product img"
@@ -119,7 +119,7 @@ const ProductItem = ({ product, style_2 = false }) => {
           ))}
         </div>
         <h3 className="tp-product-title-2">
-          <Link href={`/product-details/${_id}`}>{title}</Link>
+          <Link href={`/product-details/${itemID}`}>{title}</Link>
         </h3>
         <div className="tp-product-rating-icon tp-product-rating-icon-2">
           <Rating allowFraction size={16} initialValue={ratingVal} readonly={true} />

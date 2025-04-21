@@ -12,12 +12,12 @@ import { add_cart_product } from "@/redux/features/cartSlice";
 import { add_to_wishlist } from "@/redux/features/wishlist-slice";
 
 const ProductItem = ({ product, offer_style = false }) => {
-  const { _id, img, category, title, reviews, price, discount,status,offerDate } = product || {};
+  const { itemID, img, category, title, reviews, price, discount,status,offerDate } = product || {};
   console.log(status)
   const { cart_products } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
-  const isAddedToCart = cart_products.some((prd) => prd._id === _id);
-  const isAddedToWishlist = wishlist.some((prd) => prd._id === _id);
+  const isAddedToCart = cart_products.some((prd) => prd.itemID === itemID);
+  const isAddedToWishlist = wishlist.some((prd) => prd.itemID === itemID);
   const dispatch = useDispatch();
   const [ratingVal, setRatingVal] = useState(0);
   useEffect(() => {
@@ -47,7 +47,7 @@ const ProductItem = ({ product, offer_style = false }) => {
           } tp-product-item transition-3`}
       >
         <div className="tp-product-thumb p-relative fix">
-          <Link href={`/product-details/${_id}`}>
+          <Link href={`/product-details/${itemID}`}>
             <Image
               src={img}
               width="0"
@@ -111,7 +111,7 @@ const ProductItem = ({ product, offer_style = false }) => {
             <a href="#">{category?.name}</a>
           </div>
           <h3 className="tp-product-title">
-            <Link href={`/product-details/${_id}`}>{title}</Link>
+            <Link href={`/product-details/${itemID}`}>{title}</Link>
           </h3>
           <div className="tp-product-rating d-flex align-items-center">
             <div className="tp-product-rating-icon">

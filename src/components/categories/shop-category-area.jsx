@@ -33,7 +33,7 @@ const ShopCategoryArea = () => {
   if (!isLoading && !isError && categories?.result?.length > 0) {
     const category_items = categories.result;
     content = category_items.map((item) => (
-      <div key={item._id} className="col-lg-3 col-sm-6">
+      <div key={item.itemID} className="col-lg-3 col-sm-6">
         <div
           className="tp-category-main-box mb-25 p-relative fix"
           style={{ backgroundColor: "#F3F5F7" }}

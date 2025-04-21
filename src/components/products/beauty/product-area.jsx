@@ -1,36 +1,37 @@
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 // internal
-import { ArrowRightSmTwo } from '@/svg';
-import ProductItem from './product-item';
-import ErrorMsg from '@/components/common/error-msg';
-import { useGetProductTypeQuery } from '@/redux/features/productApi';
-import { HomeThreePrdLoader } from '@/components/loader';
+import { ArrowRightSmTwo } from "@/svg";
+import ProductItem from "./product-item";
+import ErrorMsg from "@/components/common/error-msg";
+import { useGetProductTypeQuery } from "@/redux/features/productApi";
+import { HomeThreePrdLoader } from "@/components/loader";
 
 const ProductArea = () => {
-  const { data: products, isError, isLoading } =
-    useGetProductTypeQuery({ type: 'beauty', query: `topSellers=true` });
+  const {
+    data: products,
+    isError,
+    isLoading,
+  } = useGetProductTypeQuery({ type: "suncare", query: `topSellers=true` });
   // decide what to render
   let content = null;
 
   if (isLoading) {
-    content = (
-      <HomeThreePrdLoader loading={isLoading} />
-    );
+    content = <HomeThreePrdLoader loading={isLoading} />;
   }
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && products?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data.slice(0, 8);
+  if (!isLoading && !isError && products?.length > 0) {
+    const product_items = products.slice(0, 8);
     content = product_items.map((prd) => (
       <div key={prd._id} className="col-lg-3 col-md-4 col-sm-6">
         <ProductItem product={prd} />
       </div>
-    ))
+    ));
   }
   return (
     <>
@@ -46,15 +47,12 @@ const ProductArea = () => {
             <div className="col-lg-6 col-md-4">
               <div className="tp-product-more-3 text-md-end mb-65">
                 <Link href="/shop" className="tp-btn">
-                  Shop All Products
-                  {" "}<ArrowRightSmTwo />
+                  Shop All Products <ArrowRightSmTwo />
                 </Link>
               </div>
             </div>
           </div>
-          <div className="row">
-            {content}
-          </div>
+          <div className="row">{content}</div>
         </div>
       </section>
     </>

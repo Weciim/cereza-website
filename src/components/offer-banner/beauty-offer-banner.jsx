@@ -7,7 +7,7 @@ import Timer from '../common/timer';
 import Link from 'next/link';
 
 const BeautyOfferBanner = () => {
-  const expiryTimestamp = new Date('2023-8-16');
+  const expiryTimestamp = new Date('2025-8-16');
   const { seconds, minutes, hours, days } = useTimer({expiryTimestamp});
   return (
     <>

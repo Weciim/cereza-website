@@ -7,99 +7,119 @@ import { useGetAllProductsQuery } from "@/redux/features/productApi";
 import { handleFilterSidebarClose } from "@/redux/features/shop-filter-slice";
 import ShopColorLoader from "@/components/loader/shop/color-filter-loader";
 
-const ColorFilter = ({setCurrPage,shop_right=false}) => {
+const ProductTypeFilter = ({ setCurrPage, shop_right = false }) => {
   const { data: products, isError, isLoading } = useGetAllProductsQuery();
   const router = useRouter();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  // handle color 
-  const handleColor = (clr) => {
-    setCurrPage(1)
+  // Format product type for URL consistency
+  const formatProductType = (type) => {
+    if (!type) return "";
+    return type
+      .toString()
+      .toLowerCase()
+      .replace(/&/g, "")
+      .replace(/\s+/g, "-");
+  };
+
+  // Handle product type selection
+  const handleProductType = (type) => {
+    setCurrPage(1);
+    const formattedType = formatProductType(type);
+    
+    // Create new query object
+    const newQuery = { ...router.query };
+    delete newQuery.page; // Remove page parameter
+    
+    // Toggle product type filter
+    if (newQuery.productType === formattedType) {
+      delete newQuery.productType; // Remove if already selected
+    } else {
+      newQuery.productType = formattedType; // Add new filter
+    }
+
+    // Update URL without page reload
     router.push(
-      `/${shop_right?'shop-right-sidebar':'shop'}?color=${clr
-        .toLowerCase()
-        .replace("&", "")
-        .split(" ")
-        .join("-")}`
-    )
+      {
+        pathname: router.pathname,
+        query: newQuery,
+      },
+      undefined,
+      { 
+        shallow: true,
+        scroll: false 
+      }
+    );
+    
+    // Close mobile filter sidebar if open
     dispatch(handleFilterSidebarClose());
-  }
-  // decide what to render
+  };
+
+  // Render content based on state
   let content = null;
 
   if (isLoading) {
-    content = <ShopColorLoader loading={isLoading}/>;
-  }
-  if (!isLoading && isError) {
-    content = <ErrorMsg msg="There was an error" />;
-  }
-  if (!isLoading && !isError && products?.data?.length === 0) {
-    content = <ErrorMsg msg="No Products found!" />;
-  }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data;
-    let allColor = [];
-    product_items.forEach((product) => {
-      let uniqueColor = new Set(product.imageURLs.map((item) => item?.color));
-      allColor = [...new Set([...allColor, ...uniqueColor])];
-    });
-
-    let uniqueColors = [
-      ...new Map(allColor.map((color) => [color?.name, color])).values(),
-    ];
-    content = uniqueColors.map((item, i) => {
-      if (item) {
-        return (
-          <li key={i}>
-            <div className="tp-shop-widget-checkbox-circle">
-              <input
-                type="checkbox"
-                id={item.name}
-                checked={
-                  router.query.color ===
-                  item.name.toLowerCase().replace("&", "").split(" ").join("-")
-                    ? "checked"
-                    : false
-                }
-                readOnly
-              />
-              <label
-                onClick={() => handleColor(item.name)}
-                htmlFor={item.name}
-              >
-                {item.name}
-              </label>
-              <span
-                style={{ backgroundColor: `${item.clrCode}` }}
-                className="tp-shop-widget-checkbox-circle-self"
-              ></span>
-            </div>
-            <span className="tp-shop-widget-checkbox-circle-number">
-              {
-                product_items
-                  .map((p) => p.imageURLs)
-                  .flat()
-                  .filter((i) => i?.color?.name === item?.name).length
-              }
-            </span>
-          </li>
-        );
+    content = <ShopColorLoader loading={isLoading} />;
+  } else if (isError) {
+    content = <ErrorMsg msg="There was an error loading products" />;
+  } else if (!products?.data?.length) {
+    content = <ErrorMsg msg="No products found" />;
+  } else {
+    const productItems = products.data;
+    
+    // Calculate product type counts
+    const productTypeCounts = productItems.reduce((acc, product) => {
+      if (product.productType) {
+        const type = product.productType;
+        acc[type] = (acc[type] || 0) + 1;
       }
+      return acc;
+    }, {});
+
+    // Sort product types alphabetically
+    const sortedProductTypes = Object.keys(productTypeCounts).sort((a, b) =>
+      a.localeCompare(b)
+    );
+
+    content = sortedProductTypes.map((type, index) => {
+      const formattedType = formatProductType(type);
+      const isActive = router.query.productType === formattedType;
+      
+      return (
+        <li key={index}>
+          <div className="tp-shop-widget-checkbox-circle">
+            <input
+              type="checkbox"
+              id={`product-type-${index}`}
+              checked={isActive}
+              readOnly
+            />
+            <label
+              onClick={() => handleProductType(type)}
+              htmlFor={`product-type-${index}`}
+              className={isActive ? "active" : ""}
+            >
+              {type}
+            </label>
+          </div>
+          <span className="tp-shop-widget-checkbox-circle-number">
+            {productTypeCounts[type]}
+          </span>
+        </li>
+      );
     });
   }
 
   return (
-    <>
-      <div className="tp-shop-widget mb-50">
-        <h3 className="tp-shop-widget-title">Filter by Color</h3>
-        <div className="tp-shop-widget-content">
-          <div className="tp-shop-widget-checkbox-circle-list">
-            <ul>{content}</ul>
-          </div>
+    <div className="tp-shop-widget mb-50">
+      <h3 className="tp-shop-widget-title">Filter by Product Type</h3>
+      <div className="tp-shop-widget-content">
+        <div className="tp-shop-widget-checkbox-circle-list">
+          <ul>{content}</ul>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default ColorFilter;
+export default ProductTypeFilter;
