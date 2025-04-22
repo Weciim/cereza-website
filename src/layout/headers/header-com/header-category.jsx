@@ -53,7 +53,7 @@ const HeaderCategory = ({ isCategoryActive, categoryType = "electronics" }) => {
   if (!isLoading && !isError && categories?.result?.length > 0) {
     const category_items = categories.result;
     content = category_items.map((item) => (
-      <li className="has-dropdown" key={item._id}>
+      <li className="has-dropdown" key={item.itemID}>
         <a
           className="cursor-pointer"
           onClick={() => handleCategoryRoute(item.parent, "parent")}

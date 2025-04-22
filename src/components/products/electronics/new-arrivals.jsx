@@ -59,7 +59,7 @@ const NewArrivals = () => {
     const product_items = products.data;
     content = <Swiper {...slider_setting} modules={[Navigation,Pagination]} className="tp-product-arrival-active swiper-container">
       {product_items.map((item) => (
-        <SwiperSlide key={item._id}>
+        <SwiperSlide key={item.itemID}>
           <ProductItem product={item} />
         </SwiperSlide>
       ))}

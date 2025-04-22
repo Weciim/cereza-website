@@ -8,9 +8,9 @@ import {add_cart_product,quantityDecrement} from "@/redux/features/cartSlice";
 import { remove_wishlist_product } from "@/redux/features/wishlist-slice";
 
 const WishlistItem = ({ product }) => {
-  const { _id, img, title, price } = product || {};
+  const { itemID, img, title, price } = product || {};
   const { cart_products } = useSelector((state) => state.cart);
-  const isAddToCart = cart_products.find((item) => item._id === _id);
+  const isAddToCart = cart_products.find((item) => item.itemID === itemID);
   const dispatch = useDispatch();
   // handle add product
   const handleAddProduct = (prd) => {
@@ -28,12 +28,12 @@ const WishlistItem = ({ product }) => {
   return (
     <tr>
       <td className="tp-cart-img">
-        <Link href={`/product-details/${_id}`}>
+        <Link href={`/product-details/${itemID}`}>
           <Image src={img} alt="product img" width={70} height={100} />
         </Link>
       </td>
       <td className="tp-cart-title">
-        <Link href={`/product-details/${_id}`}>{title}</Link>
+        <Link href={`/product-details/${itemID}`}>{title}</Link>
       </td>
       <td className="tp-cart-price">
         <span>${price.toFixed(2)}</span>
@@ -73,7 +73,7 @@ const WishlistItem = ({ product }) => {
 
       <td className="tp-cart-action">
         <button
-          onClick={() => handleRemovePrd({ title, id: _id })}
+          onClick={() => handleRemovePrd({ title, id: itemID })}
           className="tp-cart-action-btn"
         >
           <Close />

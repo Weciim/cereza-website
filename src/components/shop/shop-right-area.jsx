@@ -73,7 +73,7 @@ const ShopRightArea = ({
                             .slice(pageStart, pageStart + countOfPage)
                             .map((item) => (
                               <div
-                                key={item._id}
+                                key={item.itemID}
                                 className="col-xl-4 col-md-6 col-sm-6"
                               >
                                 <ProductItem product={item} />
@@ -94,7 +94,7 @@ const ShopRightArea = ({
                               {filteredRows
                                 .slice(pageStart, pageStart + countOfPage)
                                 .map((item) => (
-                                  <ShopListItem key={item._id} product={item} />
+                                  <ShopListItem key={item.itemID} product={item} />
                                 ))}
                             </div>
                           </div>

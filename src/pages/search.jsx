@@ -122,7 +122,7 @@ export default function SearchPage({ query }) {
                             .slice(0, next)
                             ?.map((item) => (
                               <div
-                                key={item._id}
+                                key={item.itemID}
                                 className="col-xl-3 col-lg-4 col-md-6 col-sm-6"
                               >
                                 <ProductItem product={item} />

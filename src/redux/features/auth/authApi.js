@@ -1,191 +1,202 @@
 import { apiSlice } from "@/redux/api/apiSlice";
-import { userLoggedIn } from "./authSlice";
+import { 
+  adminLoggedIn, 
+  adminLoggedOut, 
+  authStart, 
+  authError 
+} from "./authSlice";
 import Cookies from "js-cookie";
+import { 
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
+import {  doc, getDoc } from "firebase/firestore";
+
+import { db,auth } from "../../../firebase/config";
 
 export const authApi = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    registerUser: builder.mutation({
-      query: (data) => ({
-        url: "https://shofy-backend.vercel.app/api/user/signup",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    // signUpProvider
-    signUpProvider: builder.mutation({
-      query: (token) => ({
-        url: `https://shofy-backend.vercel.app/api/user/register/${token}`,
-        method: "POST",
-      }),
-
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+    // Admin login
+    loginAdmin: builder.mutation({
+      queryFn: async (credentials, { dispatch }) => {
+        dispatch(authStart());
         try {
-          const result = await queryFulfilled;
-
+          const { email, password } = credentials;
+          
+          // First sign in with Firebase Auth
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          
+          // Check if user is an admin in Firestore
+          const adminDoc = await getDoc(doc(db, "admins", userCredential.user.uid));
+          
+          if (!adminDoc.exists()) {
+            await signOut(auth);
+            throw new Error("Access restricted to admins only");
+          }
+          
+          const token = await userCredential.user.getIdToken();
+          
           Cookies.set(
-            "userInfo",
+            "adminInfo",
             JSON.stringify({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
+              accessToken: token,
+              admin: {
+                uid: userCredential.user.uid,
+                email: userCredential.user.email,
+                name: adminDoc.data().name,
+                role: adminDoc.data().role
+              }
             }),
-            { expires: 0.5 }
+            { expires: 1 } // 1 day expiration
           );
 
           dispatch(
-            userLoggedIn({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
+            adminLoggedIn({
+              accessToken: token,
+              admin: {
+                uid: userCredential.user.uid,
+                email: userCredential.user.email,
+                name: adminDoc.data().name,
+                role: adminDoc.data().role
+              }
             })
           );
-        } catch (err) {
-          // do nothing
-        }
-      },
-    }),
-    // login
-    loginUser: builder.mutation({
-      query: (data) => ({
-        url: "https://shofy-backend.vercel.app/api/user/login",
-        method: "POST",
-        body: data,
-      }),
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+          return { data: adminDoc.data() };
+        } catch (error) {
+          dispatch(authError(error.message));
+          return { error: { status: 'FETCH_ERROR', error: error.message } };
+        }
+      }
+    }),
+
+    // Get current admin
+    getCurrentAdmin: builder.query({
+      queryFn: async (_, { dispatch }) => {
+        dispatch(authStart());
         try {
-          const result = await queryFulfilled;
+          return new Promise((resolve) => {
+            const unsubscribe = onAuthStateChanged(auth, async (user) => {
+              if (user) {
+                // Verify admin status
+                const adminDoc = await getDoc(doc(db, "admins", user.uid));
+                
+                if (!adminDoc.exists()) {
+                  await signOut(auth);
+                  dispatch(adminLoggedOut());
+                  resolve({ data: null });
+                  return;
+                }
+                
+                const token = await user.getIdToken();
+                
+                Cookies.set(
+                  "adminInfo",
+                  JSON.stringify({
+                    accessToken: token,
+                    admin: {
+                      uid: user.uid,
+                      email: user.email,
+                      name: adminDoc.data().name,
+                      role: adminDoc.data().role
+                    }
+                  }),
+                  { expires: 1 }
+                );
 
-          Cookies.set(
-            "userInfo",
-            JSON.stringify({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
-            }),
-            { expires: 0.5 }
-          );
-
-          dispatch(
-            userLoggedIn({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
-            })
-          );
-        } catch (err) {
-          // do nothing
+                dispatch(
+                  adminLoggedIn({
+                    accessToken: token,
+                    admin: {
+                      uid: user.uid,
+                      email: user.email,
+                      name: adminDoc.data().name,
+                      role: adminDoc.data().role
+                    }
+                  })
+                );
+                
+                resolve({ data: adminDoc.data() });
+              } else {
+                dispatch(adminLoggedOut());
+                resolve({ data: null });
+              }
+              unsubscribe();
+            });
+          });
+        } catch (error) {
+          dispatch(authError(error.message));
+          return { error: { status: 'FETCH_ERROR', error: error.message } };
         }
-      },
+      }
     }),
-    // get me
-    getUser: builder.query({
-      query: () => "https://shofy-backend.vercel.app/api/user/me",
 
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+    // Admin logout
+    logoutAdmin: builder.mutation({
+      queryFn: async (_, { dispatch }) => {
         try {
-          const result = await queryFulfilled;
-          dispatch(
-            userLoggedIn({
-              user: result.data,
-            })
-          );
-        } catch (err) {
-          // do nothing
+          await signOut(auth);
+          dispatch(adminLoggedOut());
+          return { data: { message: 'Logged out successfully' } };
+        } catch (error) {
+          dispatch(authError(error.message));
+          return { error: { status: 'FETCH_ERROR', error: error.message } };
         }
-      },
-    }),
-    // confirmEmail
-    confirmEmail: builder.query({
-      query: (token) => `https://shofy-backend.vercel.app/api/user/confirmEmail/${token}`,
-
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        try {
-          const result = await queryFulfilled;
-
-          Cookies.set(
-            "userInfo",
-            JSON.stringify({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
-            }),
-            { expires: 0.5 }
-          );
-
-          dispatch(
-            userLoggedIn({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
-            })
-          );
-        } catch (err) {
-          // do nothing
-        }
-      },
-    }),
-    // reset password
-    resetPassword: builder.mutation({
-      query: (data) => ({
-        url: "https://shofy-backend.vercel.app/api/user/forget-password",
-        method: "PATCH",
-        body: data,
-      }),
-    }),
-    // confirmForgotPassword
-    confirmForgotPassword: builder.mutation({
-      query: (data) => ({
-        url: "https://shofy-backend.vercel.app/api/user/confirm-forget-password",
-        method: "PATCH",
-        body: data,
-      }),
-    }),
-    // change password
-    changePassword: builder.mutation({
-      query: (data) => ({
-        url: "https://shofy-backend.vercel.app/api/user/change-password",
-        method: "PATCH",
-        body: data,
-      }),
-    }),
-    // updateProfile password
-    updateProfile: builder.mutation({
-      query: ({ id, ...data }) => ({
-        url: `https://shofy-backend.vercel.app/api/user/update-user/${id}`,
-        method: "PUT",
-        body: data,
-      }),
-
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        try {
-          const result = await queryFulfilled;
-
-          Cookies.set(
-            "userInfo",
-            JSON.stringify({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
-            }),
-            { expires: 0.5 }
-          );
-
-          dispatch(
-            userLoggedIn({
-              accessToken: result.data.data.token,
-              user: result.data.data.user,
-            })
-          );
-        } catch (err) {
-          // do nothing
-        }
-      },
-    }),
+      }
+    })
   }),
 });
 
 export const {
-  useLoginUserMutation,
-  useRegisterUserMutation,
-  useConfirmEmailQuery,
-  useResetPasswordMutation,
-  useConfirmForgotPasswordMutation,
-  useChangePasswordMutation,
-  useUpdateProfileMutation,
-  useSignUpProviderMutation,
+  useLoginAdminMutation,
+  useGetCurrentAdminQuery,
+  useLogoutAdminMutation
 } = authApi;
+
+// Initialize auth state on app load
+export const initializeAdminAuth = (dispatch) => {
+  return onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // Verify admin status
+      const adminDoc = await getDoc(doc(db, "admins", user.uid));
+      
+      if (!adminDoc.exists()) {
+        await signOut(auth);
+        dispatch(adminLoggedOut());
+        return;
+      }
+      
+      const token = await user.getIdToken();
+      
+      Cookies.set(
+        "adminInfo",
+        JSON.stringify({
+          accessToken: token,
+          admin: {
+            uid: user.uid,
+            email: user.email,
+            name: adminDoc.data().name,
+            role: adminDoc.data().role
+          }
+        }),
+        { expires: 1 }
+      );
+
+      dispatch(
+        adminLoggedIn({
+          accessToken: token,
+          admin: {
+            uid: user.uid,
+            email: user.email,
+            name: adminDoc.data().name,
+            role: adminDoc.data().role
+          }
+        })
+      );
+    } else {
+      dispatch(adminLoggedOut());
+    }
+  });
+};

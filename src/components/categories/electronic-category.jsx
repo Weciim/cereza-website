@@ -31,7 +31,7 @@ const ElectronicCategory = () => {
   if (!isLoading && !isError && categories?.result?.length > 0) {
     const category_items = categories.result;
     content = category_items.map((item) => (
-      <div className="col" key={item._id}>
+      <div className="col" key={item.itemID}>
         <div className="tp-product-category-item text-center mb-40">
           <div className="tp-product-category-thumb fix">
             <a className='cursor-pointer' onClick={() => handleCategoryRoute(item.parent)}>

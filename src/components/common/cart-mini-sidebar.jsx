@@ -42,22 +42,22 @@ const handleCloseCartMini = () => {
             </div>
             {cart_products.length > 0 && <div className="cartmini__widget">
               {cart_products.map((item) => (
-                <div key={item._id} className="cartmini__widget-item">
+                <div key={item.itemID} className="cartmini__widget-item">
                   <div className="cartmini__thumb">
-                    <Link href={`/product-details/${item._id}`}>
+                    <Link href={`/product-details/${item.itemID}`}>
                       <Image src={item.img} width={70} height={60} alt="product img" />
                     </Link>
                   </div>
                   <div className="cartmini__content">
                     <h5 className="cartmini__title">
-                      <Link href={`/product-details/${item._id}`}>{item.title}</Link>
+                      <Link href={`/product-details/${item.itemID}`}>{item.title}</Link>
                     </h5>
                     <div className="cartmini__price-wrapper">
                       {item.discount > 0 ? <span className="cartmini__price">${(Number(item.price) - (Number(item.price) * Number(item.discount)) / 100).toFixed(2)}</span> : <span className="cartmini__price">${item.price.toFixed(2)}</span>}
                       <span className="cartmini__quantity">{" "}x{item.orderQuantity}</span>
                     </div>
                   </div>
-                  <a onClick={() => handleRemovePrd({ title: item.title, id: item._id })} className="cartmini__del cursor-pointer"><i className="fa-regular fa-xmark"></i></a>
+                  <a onClick={() => handleRemovePrd({ title: item.title, id: item.itemID })} className="cartmini__del cursor-pointer"><i className="fa-regular fa-xmark"></i></a>
                 </div>
               ))}
             </div>}

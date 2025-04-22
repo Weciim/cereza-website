@@ -34,7 +34,7 @@ const MyOrders = ({ orderData }) => {
           <tbody>
             {order_items.map((item, i) => (
               <tr key={i}>
-                <th scope="row">#{item._id.substring(20, 25)}</th>
+                <th scope="row">#{item.itemID.substring(20, 25)}</th>
                 <td data-info="title">
                   {dayjs(item.createdAt).format("MMMM D, YYYY")}
                 </td>
@@ -45,7 +45,7 @@ const MyOrders = ({ orderData }) => {
                   {item.status}
                 </td>
                 <td>
-                  <Link href={`/order/${item._id}`} className="tp-logout-btn">
+                  <Link href={`/order/${item.itemID}`} className="tp-logout-btn">
                     Invoice
                   </Link>
                 </td>

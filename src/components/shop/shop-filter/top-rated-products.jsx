@@ -26,9 +26,9 @@ const TopRatedProducts = () => {
   else if (!isLoading && !isError && products?.data?.length > 0) {
     const product_items = products.data.slice(0, 3);
     content = product_items.map((item) => (
-      <div key={item._id} className="tp-shop-widget-product-item d-flex align-items-center">
+      <div key={item.itemID} className="tp-shop-widget-product-item d-flex align-items-center">
         <div className="tp-shop-widget-product-thumb">
-          <Link href={`/product-details/${item._id}`}>
+          <Link href={`/product-details/${item.itemID}`}>
             <Image src={item.img} alt="product img" width={70} height={70} />
           </Link>
         </div>
@@ -42,7 +42,7 @@ const TopRatedProducts = () => {
             </div>
           </div>
           <h4 className="tp-shop-widget-product-title">
-            <Link href={`/product-details/${item._id}`}>{item.title.substring(0,20)}...</Link>
+            <Link href={`/product-details/${item.itemID}`}>{item.title.substring(0,20)}...</Link>
           </h4>
           <div className="tp-shop-widget-product-price-wrapper">
             <span className="tp-shop-widget-product-price">${item.price.toFixed(2)}</span>

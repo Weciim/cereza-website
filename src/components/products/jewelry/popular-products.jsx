@@ -66,7 +66,7 @@ const PopularProducts = () => {
     content = (
       <Swiper {...slider_setting} modules={[Scrollbar, Pagination]} className="tp-category-slider-active-4 swiper-container mb-70">
         {product_items.map(item => (
-          <SwiperSlide key={item._id}>
+          <SwiperSlide key={item.itemID}>
             <ProductSliderItem product={item} />
           </SwiperSlide>
         ))}

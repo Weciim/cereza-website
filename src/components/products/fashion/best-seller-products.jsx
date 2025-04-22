@@ -27,7 +27,7 @@ const BestSellerProducts = () => {
   if (!isLoading && !isError && products?.data?.length > 0) {
     const product_items = products.data.slice(0, 4);
     content = product_items.map((prd) => (
-      <div key={prd._id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+      <div key={prd.itemID} className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
         <ProductItem product={prd} />
       </div>
     ))

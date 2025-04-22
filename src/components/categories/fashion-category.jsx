@@ -39,7 +39,7 @@ const FashionCategory = () => {
   if (!isLoading && !isError && categories?.result?.length > 0) {
     const category_items = categories.result;
     content = category_items.map((item) => (
-      <div key={item._id} className="col-xxl-4 col-lg-6">
+      <div key={item.itemID} className="col-xxl-4 col-lg-6">
         <div className="tp-banner-item-2 p-relative z-index-1 grey-bg-2 mb-20 fix">
           <div
             className="tp-banner-thumb-2 include-bg transition-3"

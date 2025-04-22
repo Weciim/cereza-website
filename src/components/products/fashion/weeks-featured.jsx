@@ -58,13 +58,13 @@ const WeeksFeatured = () => {
     content = (
       <Swiper {...slider_setting} modules={[Navigation]} className="tp-featured-slider-active swiper-container">
         {product_items.map((item) => {
-          const {_id, img, title, price, discount, reviews } = item || {};
+          const {itemID, img, title, price, discount, reviews } = item || {};
           return (
-            <SwiperSlide key={item._id} className="tp-featured-item white-bg p-relative z-index-1">
+            <SwiperSlide key={item.itemID} className="tp-featured-item white-bg p-relative z-index-1">
               <div className="tp-featured-thumb include-bg" style={{ backgroundImage: `url(${img})` }} data-background="assets/img/product/slider/product-slider-1.jpg"></div>
               <div className="tp-featured-content">
                 <h3 className="tp-featured-title">
-                  <Link href={`/product-details/${_id}`}>{title}</Link>
+                  <Link href={`/product-details/${itemID}`}>{title}</Link>
                 </h3>
                 <div className="tp-featured-price-wrapper">
                   {discount > 0 ? (
@@ -82,7 +82,7 @@ const WeeksFeatured = () => {
                   <Rating allowFraction size={16} initialValue={reviews && reviews.length > 0 ? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length : 0} readonly={true} />
                 </div>
                 <div className="tp-featured-btn">
-                  <Link href={`/product-details/${_id}`} className="tp-btn tp-btn-border tp-btn-border-sm">Shop Now
+                  <Link href={`/product-details/${itemID}`} className="tp-btn tp-btn-border tp-btn-border-sm">Shop Now
                     {" "}<ArrowRightLong />
                   </Link>
                 </div>

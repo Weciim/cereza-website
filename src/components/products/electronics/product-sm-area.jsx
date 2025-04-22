@@ -36,7 +36,7 @@ const ProductSmArea = () => {
           </div>
           <div className="tp-product-sm-wrapper mr-20">
             {discount_prd.map(item => (
-              <ProductSmItem key={item._id} product={item} />
+              <ProductSmItem key={item.itemID} product={item} />
             ))}
           </div>
         </div>
@@ -51,7 +51,7 @@ const ProductSmArea = () => {
 
           <div className="tp-product-sm-wrapper mr-20">
             {featured_prd.map(item => (
-              <ProductSmItem key={item._id} product={item} />
+              <ProductSmItem key={item.itemID} product={item} />
             ))}
           </div>
         </div>
@@ -66,7 +66,7 @@ const ProductSmArea = () => {
 
           <div className="tp-product-sm-wrapper mr-20">
             {selling_prd.map(item => (
-              <ProductSmItem key={item._id} product={item} />
+              <ProductSmItem key={item.itemID} product={item} />
             ))}
           </div>
         </div>

@@ -117,7 +117,7 @@ const ProductAreaTwo = () => {
 
         <div className="row">
           {product_items.map((prd) => (
-            <div key={prd._id} className="col-lg-3 col-md-4 col-sm-6">
+            <div key={prd.itemID} className="col-lg-3 col-md-4 col-sm-6">
               <ProductItem product={prd} />
             </div>
           ))}

@@ -57,7 +57,7 @@ const TrendingProducts = () => {
       <Swiper {...slider_setting} modules={[Pagination]} className="tp-trending-slider-active swiper-container">
         {product_items.map((item) => {
           return (
-            <SwiperSlide key={item._id} className="tp-trending-item">
+            <SwiperSlide key={item.itemID} className="tp-trending-item">
               <ProductItem product={item} style_2={true} />
             </SwiperSlide>
           )

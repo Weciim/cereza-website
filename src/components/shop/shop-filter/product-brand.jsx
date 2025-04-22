@@ -39,7 +39,7 @@ const ProductBrand = ({setCurrPage,shop_right=false}) => {
     const brand_items = sortedBrands.slice(0,6);
     
     content = brand_items.map((b) => (
-      <div key={b._id} className="tp-shop-widget-brand-item">
+      <div key={b.itemID} className="tp-shop-widget-brand-item">
         <a
           onClick={() => handleBrandRoute(b.name)}
           style={{ cursor: "pointer" }}

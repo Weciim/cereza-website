@@ -61,7 +61,7 @@ const BestSellerPrd = () => {
     content = (
       <Swiper {...slider_setting} modules={[Scrollbar]} className="tp-best-slider-active swiper-container mb-10">
         {product_items.map(item => (
-          <SwiperSlide key={item._id} className="tp-best-item-4">
+          <SwiperSlide key={item.itemID} className="tp-best-item-4">
             <ProductItem product={item} />
           </SwiperSlide>
         ))}

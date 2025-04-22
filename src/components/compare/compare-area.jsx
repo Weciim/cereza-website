@@ -41,7 +41,7 @@ const CompareArea = () => {
                       <tr>
                         <th>Product</th>
                         {compareItems.map(item => (
-                          <td key={item._id} className="">
+                          <td key={item.itemID} className="">
                             <div className="tp-compare-thumb">
                               <Image
                                 src={item.img}
@@ -50,7 +50,7 @@ const CompareArea = () => {
                                 height={176}
                               />
                               <h4 className="tp-compare-product-title">
-                                <Link href={`/product-details/${item._id}`}>
+                                <Link href={`/product-details/${item.itemID}`}>
                                   {item.title}
                                 </Link>
                               </h4>
@@ -62,7 +62,7 @@ const CompareArea = () => {
                       <tr>
                         <th>Description</th>
                         {compareItems.map(item => (
-                          <td key={item._id}>
+                          <td key={item.itemID}>
                             <div className="tp-compare-desc">
                               <p>
                                 Lorem ipsum dolor sit amet consectetur adipisicing
@@ -76,7 +76,7 @@ const CompareArea = () => {
                       <tr>
                         <th>Price</th>
                         {compareItems.map(item => (
-                          <td key={item._id}>
+                          <td key={item.itemID}>
                             <div className="tp-compare-price">
                               <span>${item.price.toFixed(2)}</span>
                             </div>
@@ -87,7 +87,7 @@ const CompareArea = () => {
                       <tr>
                         <th>Add to cart</th>
                         {compareItems.map(item => (
-                          <td key={item._id}>
+                          <td key={item.itemID}>
                             <div className="tp-compare-add-to-cart">
                               <button onClick={() => handleAddProduct(item)} type="button" className="tp-btn">
                                 Add to Cart
@@ -100,7 +100,7 @@ const CompareArea = () => {
                       <tr>
                         <th>Rating</th>
                         {compareItems.map(item => (
-                          <td key={item._id}>
+                          <td key={item.itemID}>
                             <div className="tp-compare-rating">
                               <Rating
                                 allowFraction
@@ -116,9 +116,9 @@ const CompareArea = () => {
                       <tr>
                         <th>Remove</th>
                         {compareItems.map(item => (
-                          <td key={item._id}>
+                          <td key={item.itemID}>
                             <div className="tp-compare-remove">
-                              <button onClick={()=>handleRemoveComparePrd({title:item.title,id:item._id })}>
+                              <button onClick={()=>handleRemoveComparePrd({title:item.title,id:item.itemID })}>
                                 <i className="fal fa-trash-alt"></i>
                               </button>
                             </div>

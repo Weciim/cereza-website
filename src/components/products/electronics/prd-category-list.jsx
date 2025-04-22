@@ -38,7 +38,7 @@ const PrdCategoryList = () => {
   if (!isLoading && !isError && categories?.result?.length > 0) {
     const category_items = categories.result;
     content = category_items.map((item) => (
-      <li key={item._id}>
+      <li key={item.itemID}>
         <a onClick={()=>handleCategoryRoute(item.parent)} className="cursor-pointer">{item.parent}</a>
       </li>
     ));
