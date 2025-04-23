@@ -3,7 +3,7 @@ import { Rating } from 'react-simple-star-rating';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 // internal
-import { AskQuestion, CompareTwo, WishlistTwo } from '@/svg';
+import {  CompareTwo, WishlistTwo } from '@/svg';
 import DetailsBottomInfo from './details-bottom-info';
 import ProductDetailsCountdown from './product-details-countdown';
 import ProductQuantity from './product-quantity';
@@ -135,10 +135,7 @@ const DetailsWrapper = ({ productItem, handleImageActive, activeImg, detailsBott
           <WishlistTwo />
           Add Wishlist
         </button>
-        <button type="button" className="tp-product-details-action-sm-btn">
-          <AskQuestion />
-          Ask a question
-        </button>
+            
       </div>
       {/* product-details-action-sm end */}
 
