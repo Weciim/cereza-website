@@ -263,7 +263,7 @@ export const productApi = apiSlice.injectEndpoints({
           const q = query(
             collection(db, "products"),
             where("category.id", "==", product.category.id),
-            where("__name__", "!=", id),
+            // where("img", "!=", product.img),
             limit(4)
           );
 

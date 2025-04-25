@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar, Navigation,Autoplay } from "swiper";
+import { Scrollbar, Navigation, Autoplay } from "swiper";
 // internal
 import { useGetRelatedProductsQuery } from "@/redux/features/productApi";
 import ProductItem from "../products/beauty/product-item";
@@ -37,23 +37,24 @@ const slider_setting = {
   },
 };
 
-const RelatedProducts = ({id}) => {
+const RelatedProducts = ({ id }) => {
   const { data: products, isError, isLoading } = useGetRelatedProductsQuery(id);
+  console.log(products);
   // decide what to render
   let content = null;
 
   if (isLoading) {
-    content = <HomeNewArrivalPrdLoader loading={isLoading}/>;
+    content = <HomeNewArrivalPrdLoader loading={isLoading} />;
   }
   if (!isLoading && isError) {
     content = <ErrorMsg msg="There was an error" />;
   }
-  if (!isLoading && !isError && products?.data?.length === 0) {
+  if (!isLoading && !isError && products?.length === 0) {
     content = <ErrorMsg msg="No Products found!" />;
   }
-  if (!isLoading && !isError && products?.data?.length > 0) {
-    const product_items = products.data;
-    console.log(product_items);
+  if (!isLoading && !isError && products?.length > 0) {
+    const product_items = products;
+    // console.log("product_items", product_items);
     content = (
       <Swiper
         {...slider_setting}
@@ -68,11 +69,7 @@ const RelatedProducts = ({id}) => {
       </Swiper>
     );
   }
-  return (
-    <div className="tp-product-related-slider">
-      {content}
-    </div>
-  );
+  return <div className="tp-product-related-slider">{content}</div>;
 };
 
 export default RelatedProducts;

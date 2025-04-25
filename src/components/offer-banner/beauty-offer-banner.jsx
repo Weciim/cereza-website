@@ -37,7 +37,7 @@ const BeautyOfferBanner = () => {
                     <div className="tp-collection-thumb has-overlay include-bg transition-3" style={{backgroundImage:`url(${collection_thumb_2.src})`}} ></div>
                     <div className="tp-collection-content-1">
                         <h3 className="tp-collection-title-1">
-                          <Link href="/shop">Tops <br/> Blouse Shirts</Link>
+                          <Link href="/shop">Skin <br/> Care</Link>
                         </h3>
                         <div className="tp-collection-btn-1">
                           <Link href="/shop" className="tp-link-btn-line">Shop Collection</Link>
