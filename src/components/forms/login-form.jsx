@@ -42,7 +42,8 @@ const LoginForm = () => {
 
       if (result) {
         notifySuccess("Admin login successful");
-        router.push(redirect || "/");
+        //router.push(redirect || "/crud");
+        router.push("/crud");
       }
     } catch (error) {
       notifyError(
